@@ -46,3 +46,36 @@ export const deleteUser = async (req, res) => {
     });
   }
 };
+
+// view all properties
+export const getAllProperties = async (req, res) => {
+  try {
+    const properties = await Property.find().populate("seller", "name email");
+
+    res.json({
+      success: true,
+      count: properties.length,
+      properties,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+// delete property
+export const deleteProperty = async (req, res) => {
+  try {
+    await Property.findByIdAndDelete(req.params.id);
+
+    res.json({
+      success: true,
+      message: "Property deleted",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
