@@ -84,6 +84,26 @@ export const deleteProperty = async (req, res) => {
   }
 };
 
+// view all inquiries
+export const getAllInquiries = async (req, res) => {
+  try {
+    const inquiries = await Inquiry.find()
+      .populate("buyer", "name email")
+      .populate("seller", "name email")
+      .populate("property", "title price")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: inquiries.length,
+      inquiries,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // GET PENDING SELLERS
 export const getPendingSellers = async (req, res) => {
