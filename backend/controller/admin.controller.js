@@ -105,6 +105,35 @@ export const getAllInquiries = async (req, res) => {
   }
 };
 
+// DASHBOARD ANALYTICS
+export const getDashboardStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalProperties = await Property.countDocuments();
+    const activeListings = await Property.countDocuments({
+      status: "sale",
+    });
+
+    const soldProperties = await Property.countDocuments({
+      status: "sold",
+    });
+
+    res.json({
+      success: true,
+      stats: {
+        totalUsers,
+        totalProperties,
+        activeListings,
+        soldProperties,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 // GET PENDING SELLERS
 export const getPendingSellers = async (req, res) => {
   try {
