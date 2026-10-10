@@ -1,11 +1,19 @@
-import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv";
-dotenv.config();
+import mongoose from "mongoose";
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_KEY,
-  api_secret: process.env.CLOUD_SECRET,
-});
+export const connectDB = async () => {
+  try {
+    const mongoURI = process.env.MONGO_URI;
 
-export default cloudinary;
+    // Safety check to ensure your environment variable is actually loading
+    if (!mongoURI) {
+      console.error("❌ Error: MONGO_URI is not defined in your .env file!");
+      process.exit(1);
+    }
+
+    const conn = await mongoose.connect(mongoURI);
+    console.log(`✅ DB connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`❌ DB Connection Error: ${error.message}`);
+    process.exit(1); // Stop the server if the database fails to connect
+  }
+};
